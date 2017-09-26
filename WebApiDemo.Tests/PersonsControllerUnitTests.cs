@@ -8,6 +8,7 @@ using Xunit;
 using FluentAssertions;
 using WebApiDemo.Services;
 using System;
+using Moq;
 
 namespace WebApiDemo.Tests
 {
@@ -27,6 +28,29 @@ namespace WebApiDemo.Tests
             var persons = okResult.Value.Should().BeAssignableTo<IEnumerable<Person>>().Subject;
 
             persons.Count().Should().Be(50);
+        }
+
+        [Fact]
+        public async Task Persons_Get_From_Moq()
+        {
+            // Arrange
+            var serviceMock = new Mock<IPersonService>();
+            serviceMock.Setup(x => x.GetAll()).Returns(() => new List<Person>
+            {
+                new Person{Id=1, FirstName="Foo", LastName="Bar"},
+                new Person{Id=2, FirstName="John", LastName="Doe"},
+                new Person{Id=3, FirstName="Juergen", LastName="Gutsch"},
+            });
+            var controller = new PersonsController(serviceMock.Object);
+
+            // Act
+            var result = await controller.Get();
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var persons = okResult.Value.Should().BeAssignableTo<IEnumerable<Person>>().Subject;
+
+            persons.Count().Should().Be(3);
         }
 
         [Fact]
