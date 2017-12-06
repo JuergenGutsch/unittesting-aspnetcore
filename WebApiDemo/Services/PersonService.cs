@@ -1,6 +1,7 @@
 ﻿using GenFu;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApiDemo.Models;
 
 namespace WebApiDemo.Services
@@ -20,27 +21,29 @@ namespace WebApiDemo.Services
             });
         }
 
-        public IEnumerable<Person> GetAll()
+        public Task<IEnumerable<Person>> GetAll()
         {
-            return Persons;
+            var result = Persons.Select(x => x);
+            return Task.FromResult(result);
         }
 
-        public Person Get(int id)
+        public Task<Person> Get(int id)
         {
-            return Persons.First(_ => _.Id == id);
+            var result = Persons.First(_ => _.Id == id);
+            return Task.FromResult(result);
         }
 
-        public Person Add(Person person)
+        public Task<Person> Add(Person person)
         {
             var newid = Persons.OrderBy(_ => _.Id).Last().Id + 1;
             person.Id = newid;
 
             Persons.Add(person);
 
-            return person;
+            return Task.FromResult(person);
         }
 
-        public void Update(int id, Person person)
+        public Task Update(int id, Person person)
         {
             var existing = Persons.First(_ => _.Id == id);
             existing.FirstName = person.FirstName;
@@ -51,21 +54,25 @@ namespace WebApiDemo.Services
             existing.Email = person.Email;
             existing.Phone = person.Phone;
             existing.Title = person.Title;
+
+            return Task.CompletedTask;
         }
 
-        public void Delete(int id)
+        public Task Delete(int id)
         {
             var existing = Persons.First(_ => _.Id == id);
             Persons.Remove(existing);
+
+            return Task.CompletedTask;
         }
     }
 
     public interface IPersonService
     {
-        IEnumerable<Person> GetAll();
-        Person Get(int id);
-        Person Add(Person person);
-        void Update(int id, Person person);
-        void Delete(int id);
+        Task<IEnumerable<Person>> GetAll();
+        Task<Person> Get(int id);
+        Task<Person> Add(Person person);
+        Task Update(int id, Person person);
+        Task Delete(int id);
     }
 }
