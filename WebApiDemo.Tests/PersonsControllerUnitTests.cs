@@ -139,6 +139,25 @@ namespace WebApiDemo.Tests
             AssertionExtensions.ShouldThrow<InvalidOperationException>(
                 () => service.Get(20));
         }
+
+
+        [Fact]
+        public async Task Persons_Delete_Fail()
+        {
+            // Arrange
+            var service = new PersonService();
+            var controller = new PersonsController(service);
+
+            // Act
+            var result = await controller.Delete(20);
+
+            // Assert
+            var okResult = result.Should().BeOfType<NoContentResult>().Subject;
+            // should throw an eception, 
+            // because the person with id==20 doesn't exist enymore
+            AssertionExtensions.ShouldThrow<InvalidOperationException>(
+                () => service.Get(15));
+        }
     }
 }
 
