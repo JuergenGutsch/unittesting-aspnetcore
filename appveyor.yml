@@ -16,4 +16,4 @@ install:
 build_script:
 - cmd: dotnet build WebApiDemo
 test_script:
-- cmd: dotnet test WebToDeploy.Tests
+- cmd: dotnet test WebApiDemo.Tests
