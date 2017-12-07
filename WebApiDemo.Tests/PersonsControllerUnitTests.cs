@@ -35,12 +35,13 @@ namespace WebApiDemo.Tests
         {
             // Arrange
             var serviceMock = new Mock<IPersonService>();
-            serviceMock.Setup(x => x.GetAll()).Returns(() => new List<Person>
+            IEnumerable<Person> persons = new List<Person>
             {
                 new Person{Id=1, FirstName="Foo", LastName="Bar"},
                 new Person{Id=2, FirstName="John", LastName="Doe"},
                 new Person{Id=3, FirstName="Juergen", LastName="Gutsch"},
-            });
+            };
+            serviceMock.Setup(x => x.GetAll()).Returns(() => Task.FromResult(persons));
             var controller = new PersonsController(serviceMock.Object);
 
             // Act
@@ -48,7 +49,7 @@ namespace WebApiDemo.Tests
 
             // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var persons = okResult.Value.Should().BeAssignableTo<IEnumerable<Person>>().Subject;
+            var actual = okResult.Value.Should().BeAssignableTo<IEnumerable<Person>>().Subject;
 
             persons.Count().Should().Be(3);
         }
@@ -112,7 +113,7 @@ namespace WebApiDemo.Tests
             // Assert
             var okResult = result.Should().BeOfType<NoContentResult>().Subject;
 
-            var person = service.Get(20);
+            var person = await service.Get(20);
             person.Id.Should().Be(20);
             person.FirstName.Should().Be("John");
             person.LastName.Should().Be("Doe");
@@ -137,6 +138,25 @@ namespace WebApiDemo.Tests
             // because the person with id==20 doesn't exist enymore
             AssertionExtensions.ShouldThrow<InvalidOperationException>(
                 () => service.Get(20));
+        }
+
+
+        [Fact]
+        public async Task Persons_Delete_Fail()
+        {
+            // Arrange
+            var service = new PersonService();
+            var controller = new PersonsController(service);
+
+            // Act
+            var result = await controller.Delete(20);
+
+            // Assert
+            var okResult = result.Should().BeOfType<NoContentResult>().Subject;
+            // should throw an eception, 
+            // because the person with id==20 doesn't exist enymore
+            AssertionExtensions.ShouldThrow<InvalidOperationException>(
+                () => service.Get(15));
         }
     }
 }

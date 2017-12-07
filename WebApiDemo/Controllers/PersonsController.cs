@@ -18,7 +18,7 @@ namespace WebApiDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var models = _personService.GetAll();
+            var models = await _personService.GetAll();
 
             return Ok(models);
         }
@@ -27,7 +27,7 @@ namespace WebApiDemo.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var model = _personService.Get(id);
+            var model = await _personService.Get(id);
 
             return Ok(model);
         }
@@ -41,7 +41,7 @@ namespace WebApiDemo.Controllers
                 return BadRequest(ModelState);
             }
 
-            var person = _personService.Add(model);
+            var person = await _personService.Add(model);
 
             return CreatedAtAction("Get", new { id = person.Id }, person);
         }
@@ -55,7 +55,7 @@ namespace WebApiDemo.Controllers
                 return BadRequest(ModelState);
             }
 
-            _personService.Update(id, model);
+            await _personService.Update(id, model);
 
             return NoContent();
         }
@@ -64,7 +64,7 @@ namespace WebApiDemo.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            _personService.Delete(id);
+            await _personService.Delete(id);
             return NoContent();
         }
     }
