@@ -15,4 +15,6 @@ pipelines:
           - export TEST_NAME=WebApiDemo.Tests
           - dotnet restore
           - dotnet build $PROJECT_NAME
-          - dotnet test $TEST_NAME
+          - dotnet test $TEST_NAME          
+          - chmod +x ./deploy-to-azure.bash
+          - ./deploy-to-azure.bash
