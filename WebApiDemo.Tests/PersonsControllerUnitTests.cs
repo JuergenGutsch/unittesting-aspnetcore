@@ -140,23 +140,23 @@ namespace WebApiDemo.Tests
                 () => service.Get(20));
         }
 
-        // [Fact]
-        // public async Task Persons_Delete_Failing()
-        // {
-        //     // Arrange
-        //     var service = new PersonService();
-        //     var controller = new PersonsController(service);
+        [Fact]
+        public async Task Persons_Delete_Failing()
+        {
+            // Arrange
+            var service = new PersonService();
+            var controller = new PersonsController(service);
 
-        //     // Act
-        //     var result = await controller.Delete(20);
+            // Act
+            var result = await controller.Delete(20);
 
-        //     // Assert
-        //     var okResult = result.Should().BeOfType<NoContentResult>().Subject;
-        //     // should throw an eception, 
-        //     // because the person with id==20 doesn't exist enymore
-        //     AssertionExtensions.ShouldThrow<InvalidOperationException>(
-        //         () => service.Get(10));
-        // }
+            // Assert
+            var okResult = result.Should().BeOfType<NoContentResult>().Subject;
+            // should throw an eception, 
+            // because the person with id==20 doesn't exist enymore
+            AssertionExtensions.ShouldThrow<InvalidOperationException>(
+                () => service.Get(10));
+        }
     }
 }
 
