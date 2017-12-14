@@ -11,9 +11,19 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+environment:
+  SITE_NAME: build-with-appveyor
+  FTP_PASSWORD:
+    secure: U1fuLaWVY3EpZe0jWlDkkvmWEG8xhf8iQ6fk7pNVz7Q5yx6EX37z0IorrgLRpzdwjqJLr5oO5CocUl332sd7Lw==
+  GITHUB_USERNAME: JuergenGutsch
+  GITHUB_PASSWORD:
+    secure: w8+bqxuEUHy6VQT9ZtSoyw==
+  REPOSITORY_NAME: unittesting-aspnetcore
 install:
 - cmd: dotnet restore WebApiDemo.sln
 build_script:
 - cmd: dotnet build WebApiDemo
 test_script:
 - cmd: dotnet test WebApiDemo.Tests
+deploy_script:
+- ps: .\deploy-to-azure.ps1
